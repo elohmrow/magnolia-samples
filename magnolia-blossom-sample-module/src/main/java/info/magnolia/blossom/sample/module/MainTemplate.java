@@ -37,6 +37,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -53,11 +54,13 @@ import info.magnolia.module.blossom.annotation.Template;
 import info.magnolia.module.blossom.annotation.TernaryBoolean;
 import info.magnolia.ui.form.config.TabBuilder;
 import info.magnolia.ui.framework.config.UiConfig;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 /**
  * Template with two columns, a main content area and a right side column.
  */
 @Controller
+@SessionAttributes("requestOrigin")
 @Template(title = "Main", id = "blossomSampleModule:pages/main")
 public class MainTemplate {
 
@@ -91,7 +94,7 @@ public class MainTemplate {
     }
 
     @RequestMapping("/mainTemplate")
-    public String render(Node page, ModelMap model) throws RepositoryException {
+    public String render(Node page, ModelMap model, HttpSession session) throws RepositoryException {
 
         Map<String, String> navigation = new LinkedHashMap<String, String>();
         for (Node node : NodeUtil.getNodes(page.getSession().getNode("/home"), MgnlNodeType.NT_PAGE)) {
@@ -106,6 +109,10 @@ public class MainTemplate {
             a++;
         }
         model.put("navigation", navigation);
+        String sid = session.getId();
+        String previousPage = (String) session.getAttribute("requestOrigin");
+        session.setAttribute("requestOrigin", previousPage+"1");
+        model.put("sid", sid);
 
         return "pages/main.jsp";
     }
