@@ -47,6 +47,14 @@
 
         <div id="content">
 
+        <div>
+            <p>DISCLAIMER FORM</p>
+            <form name="input" action="demo_form_action.asp" method="get">
+                Username: <input type="text" name="user">
+                <input type="submit" value="Submit">
+            </form>
+        </div>
+
         <cms:area name="main" />
 
         <cms:area name="promos" />

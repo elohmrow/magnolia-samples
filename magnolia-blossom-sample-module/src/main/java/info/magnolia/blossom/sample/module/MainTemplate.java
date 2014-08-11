@@ -39,6 +39,7 @@ import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpSession;
 
+import info.magnolia.context.MgnlContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -102,12 +103,17 @@ public class MainTemplate {
                 navigation.put(node.getPath(), PropertyUtil.getString(node, "title", ""));
             }
 
-            String prev = PropertyUtil.getString(node, "previousPage");
-            String next = PropertyUtil.getString(node, "nextPage");
-            String origin = PropertyUtil.getString(node, "originPage");
+
             int a=0;
             a++;
         }
+
+        Node node = MgnlContext.getAggregationState().getCurrentContentNode();
+        String prev = PropertyUtil.getString(node, "previousPage");
+        String next = PropertyUtil.getString(node, "nextPage");
+        String origin = PropertyUtil.getString(node, "originPage");
+
+
         model.put("navigation", navigation);
         String sid = session.getId();
         String previousPage = (String) session.getAttribute("requestOrigin");
