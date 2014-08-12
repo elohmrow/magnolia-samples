@@ -49,9 +49,11 @@
 
         <div>
             <p>DISCLAIMER FORM</p>
-            <form name="input" action="demo_form_action.asp" method="get">
-                Username: <input type="text" name="user">
-                <input type="submit" value="Submit">
+            <form name="input" action="${previousPage}.html" method="get">
+                <input type="submit" value="Back">
+            </form>
+            <form name="input" action="${nextPage}.html" method="get">
+                <input type="submit" value="Next">
             </form>
         </div>
 

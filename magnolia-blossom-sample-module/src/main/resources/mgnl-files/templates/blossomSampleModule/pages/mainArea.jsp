@@ -1,4 +1,4 @@
-<%--@elvariable id="components" type="java.util.Collection"--%>
+tesco<%--@elvariable id="components" type="java.util.Collection"--%>
 <%@ include file="../includes/taglibs.jsp" %>
 
 <div id="main">

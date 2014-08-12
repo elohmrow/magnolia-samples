@@ -97,28 +97,31 @@ public class MainTemplate {
     @RequestMapping("/mainTemplate")
     public String render(Node page, ModelMap model, HttpSession session) throws RepositoryException {
 
+        Node currentContentNode = MgnlContext.getAggregationState().getCurrentContentNode();
+        String requestOrigin = (String) session.getAttribute("requestOrigin");
+        String expectedPrevious = PropertyUtil.getString(currentContentNode, "previousPage");
+
+        if(expectedPrevious!=null && !expectedPrevious.equals(requestOrigin)) {
+            //Redirect to Origin of Flow
+            String originOfFlow = PropertyUtil.getString(currentContentNode, "originPage") + ".html";
+            //String originOfFlow = "test1.html";
+            return "redirect:" + originOfFlow;
+        }
+
         Map<String, String> navigation = new LinkedHashMap<String, String>();
         for (Node node : NodeUtil.getNodes(page.getSession().getNode("/home"), MgnlNodeType.NT_PAGE)) {
             if (!PropertyUtil.getBoolean(node, "hideInNavigation", false)) {
                 navigation.put(node.getPath(), PropertyUtil.getString(node, "title", ""));
             }
-
-
-            int a=0;
-            a++;
         }
 
-        Node node = MgnlContext.getAggregationState().getCurrentContentNode();
-        String prev = PropertyUtil.getString(node, "previousPage");
-        String next = PropertyUtil.getString(node, "nextPage");
-        String origin = PropertyUtil.getString(node, "originPage");
+        String current = PropertyUtil.getString(currentContentNode, "title");
+        String next = PropertyUtil.getString(currentContentNode, "nextPage");
 
-
+        session.setAttribute("requestOrigin", current);
+        model.put("previousPage", expectedPrevious);
+        model.put("nextPage", next);
         model.put("navigation", navigation);
-        String sid = session.getId();
-        String previousPage = (String) session.getAttribute("requestOrigin");
-        session.setAttribute("requestOrigin", previousPage+"1");
-        model.put("sid", sid);
 
         return "pages/main.jsp";
     }
